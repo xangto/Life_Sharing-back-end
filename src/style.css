@@ -1,0 +1,54 @@
+@layer theme, base, components, utilities;
+
+/* Tailwind v4：只引入 theme 与 utilities，省略 preflight（避免覆盖 Element Plus 基础样式） */
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/utilities.css' layer(utilities);
+
+/* 与 Element Plus 默认主色一致，提供 text-primary / bg-primary 等工具类 */
+@theme {
+  --color-primary: #409eff;
+  --color-primary-light: #ecf5ff;
+  --color-success: #67c23a;
+  --color-warning: #e6a23c;
+  --color-danger: #f56c6c;
+  --color-info: #909399;
+}
+
+/* 手动导入的 Element Plus 功能组件样式（组件按需导入不携带这些样式） */
+/* 注：element-plus 2.14 的 exports 字段在 "style" 条件下不导出 es/components 下各组件的 style/css 入口，
+   改为直接引入其底层 theme-chalk 文件（含 message-box 依赖的 badge/input/button/overlay） */
+@import 'element-plus/theme-chalk/base.css';
+@import 'element-plus/theme-chalk/el-badge.css';
+@import 'element-plus/theme-chalk/el-input.css';
+@import 'element-plus/theme-chalk/el-button.css';
+@import 'element-plus/theme-chalk/el-overlay.css';
+@import 'element-plus/theme-chalk/el-message.css';
+@import 'element-plus/theme-chalk/el-message-box.css';
+@import 'element-plus/theme-chalk/el-loading.css';
+
+html,
+body,
+#app {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+}
+
+/* Tailwind preflight 已禁用，手动重置标题与段落的外边距 */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0;
+}
+
+/* el-menu 自带右边框，避免与侧边栏边框叠成双线 */
+.el-menu {
+  border-right: none;
+}
