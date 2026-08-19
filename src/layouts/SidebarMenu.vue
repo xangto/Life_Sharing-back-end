@@ -38,6 +38,7 @@ const menus = [
     path: '/pageManagement', label: '页面管理', iconName: 'icon-park-outline:web-page',
     children: [
       {path: '/friend', label: '友链管理', iconName: 'mdi:people'},
+      {path: '/about', label: '关于我', iconName: 'cib:about-me'},
     ]
   }
 ]

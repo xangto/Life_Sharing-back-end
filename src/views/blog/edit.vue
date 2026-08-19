@@ -1,5 +1,5 @@
 <template>
-  <div class="mx-auto max-w-5xl">
+  <div class="mx-auto">
     <div class="mb-4 flex items-center justify-between">
       <h2 class="text-xl font-semibold text-gray-800">{{ isEdit ? '编辑文章' : '新增文章' }}</h2>
       <div class="flex gap-2">

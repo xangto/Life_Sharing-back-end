@@ -63,6 +63,12 @@ const routes: RouteRecordRaw[] = [
         meta: { title: '友链管理' },
       },
       {
+        path: 'about',
+        name: 'about',
+        component: () => import('@/views/about/index.vue'),
+        meta: { title: '关于我' },
+      },
+      {
         path: 'password',
         name: 'Password',
         component: () => import('@/views/password/index.vue'),

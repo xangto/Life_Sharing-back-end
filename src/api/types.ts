@@ -193,6 +193,17 @@ export interface FriendPublishDTO {
   isPublished: boolean
 }
 
+// 关于我
+interface AboutItem {
+  id: number
+  title: string
+  content: string
+}
+
+export type AboutVO = Record<string, AboutItem>
+
+export type AboutDTO = Record<string, AboutItem>
+
 // 用户
 export interface LoginDTO {
   username: string
