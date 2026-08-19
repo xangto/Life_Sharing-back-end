@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2 class="mb-4 text-xl font-semibold text-gray-800">仪表盘</h2>
+    <h2 class="pb-4 text-xl font-semibold text-gray-800">首页</h2>
     <div v-if="loading" class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
       <el-skeleton
         v-for="i in 4"
