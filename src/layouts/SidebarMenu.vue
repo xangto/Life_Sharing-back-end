@@ -30,7 +30,7 @@ const menus = [
       {path: '/blog', label: '文章管理', iconName: 'line-md:document'},
       {path: '/category', label: '分类管理', iconName: 'material-symbols:folder-outline'},
       {path: '/tag', label: '标签管理', iconName: 'ion:pricetag-outline'},
-      {path: '/moment', label: '动态管理', iconName: 'material-symbols:chat-outline'},
+      // {path: '/moment', label: '动态管理', iconName: 'material-symbols:chat-outline'},
       {path: '/comment', label: '评论管理', iconName: 'line-md:chat-round'},
     ]
   },

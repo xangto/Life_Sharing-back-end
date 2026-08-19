@@ -44,12 +44,12 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/views/tag/index.vue'),
         meta: { title: '标签管理' },
       },
-      {
-        path: 'moment',
-        name: 'Moment',
-        component: () => import('@/views/moment/index.vue'),
-        meta: { title: '动态管理' },
-      },
+      // {
+      //   path: 'moment',
+      //   name: 'Moment',
+      //   component: () => import('@/views/moment/index.vue'),
+      //   meta: { title: '动态管理' },
+      // },
       {
         path: 'comment',
         name: 'Comment',
