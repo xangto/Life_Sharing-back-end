@@ -1,23 +1,22 @@
 <template>
   <div>
     <div class="mb-4 flex items-center justify-between">
-      <h2 class="text-xl font-semibold text-gray-800">评论管理</h2>
+      <h2 class="text-xl font-semibold text-gray-800">友链管理</h2>
     </div>
 
     <div class="rounded-lg border border-gray-100 bg-white p-4 shadow-sm">
       <el-form inline :model="query" @submit.prevent>
-        <el-form-item label="按文章筛选">
-          <el-select
-              v-model="query.blogId"
-              placeholder="全部文章"
-              clearable
-              filterable
-              class="w-72"
-              @change="handleSearch"
-          >
-            <el-option v-for="b in blogs" :key="b.value" :label="b.label" :value="b.value"/>
-          </el-select>
+        <el-form-item label="昵称">
+          <el-input v-model="query.nickname" clearable></el-input>
         </el-form-item>
+        <el-form-item label="网址">
+          <el-input v-model="query.website" clearable></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" :icon="Search" @click="handleSearch">搜索</el-button>
+          <el-button :icon="Refresh" @click="handleReset">重置</el-button>
+        </el-form-item>
+
       </el-form>
 
       <el-table
@@ -33,18 +32,15 @@
             <el-image v-if="row.avatar" :src="row.avatar"/>
           </template>
         </el-table-column>
-        <el-table-column prop="content" label="内容" min-width="240" show-overflow-tooltip/>
-        <el-table-column prop="blogId" label="文章" width="200">
-          <template #default="{row}">
-            {{ blogMap.get(row.blogId) }}
-          </template>
-        </el-table-column>
+        <el-table-column prop="description" label="简介" min-width="240" show-overflow-tooltip/>
+        <el-table-column prop="website" label="网址" width="240" show-overflow-tooltip/>
+
         <el-table-column label="是否公开" width="90">
           <template #default="{ row }">
-            <el-switch :model-value="row.isPublished" @change="handlePublish(row as CommentVO)"/>
+            <el-switch :model-value="row.isPublished" @change="handlePublish(row as FriendVO)"/>
           </template>
         </el-table-column>
-        <el-table-column prop="ip" label="IP" width="130"/>
+        <el-table-column prop="views" label="浏览量" width="100"/>
         <el-table-column prop="createTime" label="时间" width="170"/>
         <el-table-column label="操作" width="110" fixed="right">
           <template #default="{row}">
@@ -69,28 +65,22 @@
 </template>
 
 <script setup lang="ts">
-import {onMounted, reactive, ref, shallowRef} from 'vue'
+import {onMounted, reactive, ref} from 'vue'
 import {ElMessage, ElMessageBox, vLoading} from 'element-plus'
-import {getAllBlog} from '@/api/blog'
-import {delComment, getCommentList, updateCommentPublish} from '@/api/comment'
-import type {CommentVO, OptionVO} from '@/api/types'
+import type {FriendPageDTO, FriendVO} from '@/api/types'
+import {delFriend, getFriendList, updateFriendPublish} from "@/api/friend.ts";
+import {Refresh, Search} from "@element-plus/icons-vue";
 
 const loading = ref(false)
-const rows = ref<CommentVO[]>([])
+const rows = ref<FriendVO[]>([])
 const total = ref(0)
-const blogs = ref<OptionVO[]>([])
-const blogMap = shallowRef(new Map())
 
-const query = reactive({pageNum: 1, pageSize: 10, blogId: undefined as string | undefined})
+const query = reactive<FriendPageDTO>({pageNum: 1, pageSize: 10, nickname: '', website: ''})
 
 async function fetchList() {
   loading.value = true
   try {
-    const data = await getCommentList({
-      pageNum: query.pageNum,
-      pageSize: query.pageSize,
-      blogId: query.blogId || undefined,
-    })
+    const data = await getFriendList(query)
     rows.value = data.records
     total.value = data.total
   } catch {
@@ -100,24 +90,20 @@ async function fetchList() {
   }
 }
 
-async function fetchBlogs() {
-  try {
-    blogs.value = await getAllBlog()
-    blogs.value.forEach(e => {
-      blogMap.value.set(e.value, e.label)
-    })
-  } catch {
-    // 错误提示已由拦截器统一处理
-  }
-}
 
 function handleSearch() {
   query.pageNum = 1
   fetchList()
 }
 
-const handlePublish = (row: CommentVO) => {
-  updateCommentPublish(row.id, !row.isPublished).then(() => {
+function handleReset() {
+  query.nickname = ''
+  query.website = ''
+  handleSearch()
+}
+
+const handlePublish = (row: FriendVO) => {
+  updateFriendPublish({id: row.id, isPublished: !row.isPublished}).then(() => {
     ElMessage.success('操作成功')
     row.isPublished = !row.isPublished
   })
@@ -134,7 +120,7 @@ const handleDelete = async (id: string) => {
     return
   }
 
-  delComment(id).then(() => {
+  delFriend(id).then(() => {
     ElMessage.success('删除成功')
   }).finally(() => {
     fetchList()
@@ -142,7 +128,6 @@ const handleDelete = async (id: string) => {
 }
 
 onMounted(() => {
-  fetchBlogs()
   fetchList()
 })
 </script>

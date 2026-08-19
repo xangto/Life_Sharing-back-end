@@ -57,6 +57,12 @@ const routes: RouteRecordRaw[] = [
         meta: { title: '评论管理' },
       },
       {
+        path: 'friend',
+        name: 'friend',
+        component: () => import('@/views/friend/index.vue'),
+        meta: { title: '友链管理' },
+      },
+      {
         path: 'password',
         name: 'Password',
         component: () => import('@/views/password/index.vue'),

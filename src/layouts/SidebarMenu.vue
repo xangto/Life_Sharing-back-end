@@ -6,7 +6,11 @@
     </div>
     <el-menu :default-active="activeMenu" router class="flex-1 border-r-0">
       <el-menu-item v-for="item in menus" :key="item.path" :index="item.path">
-        <el-icon><component :is="item.icon" /></el-icon>
+        <el-icon >
+          <component v-if="item.icon" :is="item.icon" />
+          <Icon v-else :icon="item.iconName" size="18" />
+        </el-icon>
+
         <span>{{ item.label }}</span>
       </el-menu-item>
     </el-menu>
@@ -25,6 +29,8 @@ import {
   Platform,
   PriceTag,
 } from '@element-plus/icons-vue'
+import {Icon} from "@iconify/vue";
+
 
 const route = useRoute()
 
@@ -35,6 +41,7 @@ const menus = [
   { path: '/tag', label: '标签管理', icon: PriceTag },
   { path: '/moment', label: '动态管理', icon: ChatDotRound },
   { path: '/comment', label: '评论管理', icon: ChatLineRound },
+  { path: '/friend', label: '友链管理', iconName: 'wordpress:people' },
 ]
 
 // 文章编辑页归属"文章管理"菜单高亮

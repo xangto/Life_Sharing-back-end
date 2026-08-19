@@ -98,6 +98,7 @@ export interface BlogVO {
   updateTime: string
   createTime: string
 }
+
 // 文章详情
 export interface BlogInfoVO {
   id: string
@@ -168,6 +169,28 @@ export interface CommentVO {
 
 export interface CommentListQuery extends PageQuery {
   blogId?: string
+}
+
+// 友链
+export interface FriendVO {
+  id: string
+  nickname: string
+  avatar: string
+  description: string
+  website: string
+  isPublished: boolean
+  views: number
+  createTime: string
+}
+
+export interface FriendPageDTO extends PageQuery {
+  nickname: string
+  website: string
+}
+
+export interface FriendPublishDTO {
+  id: string
+  isPublished: boolean
 }
 
 // 用户
