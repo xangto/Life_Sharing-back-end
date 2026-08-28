@@ -1,6 +1,6 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
-import type { RouteRecordRaw } from 'vue-router'
-import { getToken } from '@/utils/auth'
+import { createRouter, createWebHashHistory } from 'vue-router';
+import type { RouteRecordRaw } from 'vue-router';
+import { getToken } from '@/utils/auth';
 
 const routes: RouteRecordRaw[] = [
   {
@@ -77,23 +77,23 @@ const routes: RouteRecordRaw[] = [
     ],
   },
   { path: '/:pathMatch(.*)*', redirect: '/dashboard' },
-]
+];
 
 const router = createRouter({
   history: createWebHashHistory(),
   routes,
-})
+});
 
 router.beforeEach((to) => {
-  const title = to.meta.title as string | undefined
-  document.title = title ? `${title} · Life 管理后台` : 'Life 管理后台'
+  const title = to.meta.title as string | undefined;
+  document.title = title ? `${title} · Life 管理后台` : 'Life 管理后台';
 
   if (!getToken() && to.path !== '/login') {
-    return { path: '/login', query: { redirect: to.fullPath } }
+    return { path: '/login', query: { redirect: to.fullPath } };
   }
   if (getToken() && to.path === '/login') {
-    return '/dashboard'
+    return '/dashboard';
   }
-})
+});
 
-export default router
+export default router;

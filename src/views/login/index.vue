@@ -16,7 +16,12 @@
           @keyup.enter="handleSubmit"
         >
           <el-form-item prop="username">
-            <el-input v-model="form.username" placeholder="用户名" autocomplete="username" :prefix-icon="User" />
+            <el-input
+              v-model="form.username"
+              placeholder="用户名"
+              autocomplete="username"
+              :prefix-icon="User"
+            />
           </el-form-item>
           <el-form-item prop="password">
             <el-input
@@ -44,45 +49,45 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { ElMessage } from 'element-plus'
-import { Lock, User } from '@element-plus/icons-vue'
-import type { FormInstance, FormRules } from 'element-plus'
-import { useAuthStore } from '@/stores/auth'
+import { reactive, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { ElMessage } from 'element-plus';
+import { Lock, User } from '@element-plus/icons-vue';
+import type { FormInstance, FormRules } from 'element-plus';
+import { useAuthStore } from '@/stores/auth';
 
-const router = useRouter()
-const route = useRoute()
-const auth = useAuthStore()
+const router = useRouter();
+const route = useRoute();
+const auth = useAuthStore();
 
-const formRef = ref<FormInstance>()
-const loading = ref(false)
-const form = reactive({ username: '', password: '' })
+const formRef = ref<FormInstance>();
+const loading = ref(false);
+const form = reactive({ username: '', password: '' });
 
 const rules: FormRules = {
   username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
   password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
-}
+};
 
 async function handleSubmit() {
-  if (loading.value) return
-  const valid = await formRef.value?.validate().catch(() => false)
-  if (!valid) return
-  loading.value = true
+  if (loading.value) return;
+  const valid = await formRef.value?.validate().catch(() => false);
+  if (!valid) return;
+  loading.value = true;
   try {
-    await auth.login({ ...form })
-    ElMessage.success('登录成功')
-    const raw = typeof route.query.redirect === 'string' ? route.query.redirect : '/dashboard'
-    const redirect = raw.startsWith('/') ? raw : '/dashboard'
-    router.push(redirect)
+    await auth.login({ ...form });
+    ElMessage.success('登录成功');
+    const raw = typeof route.query.redirect === 'string' ? route.query.redirect : '/dashboard';
+    const redirect = raw.startsWith('/') ? raw : '/dashboard';
+    router.push(redirect);
   } catch (e) {
     // 拦截器已对业务/网络错误统一提示；此处仅兜底拦截器未覆盖的错误（如登录响应缺 token 字段）
-    const err = e as Error
+    const err = e as Error;
     if (err.message === '登录响应缺少 token 字段') {
-      ElMessage.error(err.message)
+      ElMessage.error(err.message);
     }
   } finally {
-    loading.value = false
+    loading.value = false;
   }
 }
 </script>
