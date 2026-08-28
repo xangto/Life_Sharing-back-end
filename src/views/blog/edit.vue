@@ -112,28 +112,28 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, reactive, ref } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import { MdEditor } from 'md-editor-v3';
-import 'md-editor-v3/lib/style.css';
-import { ElMessage } from 'element-plus';
-import type { FormInstance, FormRules } from 'element-plus';
-import { createBlog, getBlogDetail, updateBlog } from '@/api/blog';
-import { getAllCategory } from '@/api/category';
-import type { OptionVO } from '@/api/types';
-import { getAllTag } from '@/api/tag.ts';
-import { htmlToMarkdown } from '@/utils/htmlToMarkdown.ts';
+import { onMounted, reactive, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { MdEditor } from 'md-editor-v3'
+import 'md-editor-v3/lib/style.css'
+import { ElMessage } from 'element-plus'
+import type { FormInstance, FormRules } from 'element-plus'
+import { createBlog, getBlogDetail, updateBlog } from '@/api/blog'
+import { getAllCategory } from '@/api/category'
+import type { OptionVO } from '@/api/types'
+import { getAllTag } from '@/api/tag.ts'
+import { htmlToMarkdown } from '@/utils/htmlToMarkdown.ts'
 
-const route = useRoute();
-const router = useRouter();
+const route = useRoute()
+const router = useRouter()
 
-const blogId = route.params.id;
-const isEdit = blogId !== null;
+const blogId = route.params.id
+const isEdit = blogId !== null
 
-const formRef = ref<FormInstance>();
-const saving = ref(false);
-const categories = ref<OptionVO[]>([]);
-const tags = ref<OptionVO[]>([]);
+const formRef = ref<FormInstance>()
+const saving = ref(false)
+const categories = ref<OptionVO[]>([])
+const tags = ref<OptionVO[]>([])
 
 const form = reactive({
   title: '',
@@ -143,7 +143,7 @@ const form = reactive({
   description: '',
   content: '',
   isPublished: false,
-});
+})
 
 const rules: FormRules = {
   title: [{ required: true, message: '请输入标题', trigger: 'blur' }],
@@ -151,69 +151,69 @@ const rules: FormRules = {
   categoryId: [{ required: true, message: '请选择分类', trigger: 'change' }],
   content: [{ required: true, message: '请输入正文内容', trigger: 'change' }],
   tags: [{ required: true, message: '请选择标签', trigger: 'change' }],
-};
+}
 
 onMounted(async () => {
   getAllCategory()
     .then((data) => {
-      categories.value = data;
+      categories.value = data
     })
     .catch(() => {
       // 错误提示已由拦截器统一处理
-    });
+    })
 
   getAllTag().then((data) => {
-    tags.value = data;
-  });
+    tags.value = data
+  })
 
   if (blogId) {
     try {
-      const detail = await getBlogDetail(blogId as string);
-      form.title = detail.title;
-      form.categoryId = String(detail.categoryId);
-      form.firstPicture = detail.firstPicture;
-      form.description = detail.description;
-      form.content = htmlToMarkdown(detail.content);
-      form.isPublished = detail.isPublished;
-      form.tags = detail.tags;
+      const detail = await getBlogDetail(blogId as string)
+      form.title = detail.title
+      form.categoryId = String(detail.categoryId)
+      form.firstPicture = detail.firstPicture
+      form.description = detail.description
+      form.content = htmlToMarkdown(detail.content)
+      form.isPublished = detail.isPublished
+      form.tags = detail.tags
       // 注意：BlogVO 无 tags 字段，编辑时标签无法回填，提交会覆盖为当前输入
     } catch {
-      router.push('/blog');
+      router.push('/blog')
     }
   }
-});
+})
 
 function countWords(text: string) {
-  return text.replace(/\s/g, '').length;
+  return text.replace(/\s/g, '').length
 }
 
 function handleUploadImg(files: FileList, callback: (arg0: string[]) => void) {
-  console.log(files);
+  console.log(files)
   callback([
     'https://cdn.naccl.top/blog/blogHosting/2025/01/B01/d9abe332-b743-48bb-9265-6db333a4caf2.jpg#w50',
-  ]);
+  ])
 }
 
-const textHtml = ref('');
+const textHtml = ref('')
 
 function handleHtml(text: string) {
-  textHtml.value = text;
+  textHtml.value = text
 }
 
 function handleCancel() {
   if (router.options.history.state.back) {
-    router.back();
+    router.back()
   } else {
-    router.push('/blog');
+    router.push('/blog')
   }
 }
 
 async function handleSave() {
-  if (saving.value) return;
-  const valid = await formRef.value?.validate().catch(() => false);
-  if (!valid) return;
-  saving.value = true;
-  const words = countWords(form.content);
+  if (saving.value) return
+  const valid = await formRef.value?.validate().catch(() => false)
+  if (!valid) return
+  saving.value = true
+  const words = countWords(form.content)
   const payload = {
     title: form.title,
     firstPicture: form.firstPicture,
@@ -224,19 +224,19 @@ async function handleSave() {
     readTime: Math.max(1, Math.ceil(words / 400)),
     categoryId: form.categoryId,
     tags: form.tags.join(','),
-  };
+  }
   try {
     if (blogId) {
-      await updateBlog({ id: String(blogId), ...payload });
+      await updateBlog({ id: String(blogId), ...payload })
     } else {
-      await createBlog(payload);
+      await createBlog(payload)
     }
-    ElMessage.success('保存成功');
-    router.push('/blog');
+    ElMessage.success('保存成功')
+    router.push('/blog')
   } catch {
     // 错误提示已由拦截器统一处理
   } finally {
-    saving.value = false;
+    saving.value = false
   }
 }
 </script>

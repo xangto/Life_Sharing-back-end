@@ -120,59 +120,59 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, reactive, ref, shallowRef } from 'vue';
-import { ElMessage, ElMessageBox, vLoading } from 'element-plus';
-import { getAllBlog } from '@/api/blog';
-import { delComment, getCommentList, updateCommentPublish } from '@/api/comment';
-import type { CommentVO, OptionVO } from '@/api/types';
+import { onMounted, reactive, ref, shallowRef } from 'vue'
+import { ElMessage, ElMessageBox, vLoading } from 'element-plus'
+import { getAllBlog } from '@/api/blog'
+import { delComment, getCommentList, updateCommentPublish } from '@/api/comment'
+import type { CommentVO, OptionVO } from '@/api/types'
 
-const loading = ref(false);
-const rows = ref<CommentVO[]>([]);
-const total = ref(0);
-const blogs = ref<OptionVO[]>([]);
-const blogMap = shallowRef(new Map());
+const loading = ref(false)
+const rows = ref<CommentVO[]>([])
+const total = ref(0)
+const blogs = ref<OptionVO[]>([])
+const blogMap = shallowRef(new Map())
 
-const query = reactive({ pageNum: 1, pageSize: 10, blogId: undefined as string | undefined });
+const query = reactive({ pageNum: 1, pageSize: 10, blogId: undefined as string | undefined })
 
 async function fetchList() {
-  loading.value = true;
+  loading.value = true
   try {
     const data = await getCommentList({
       pageNum: query.pageNum,
       pageSize: query.pageSize,
       blogId: query.blogId || undefined,
-    });
-    rows.value = data.records;
-    total.value = data.total;
+    })
+    rows.value = data.records
+    total.value = data.total
   } catch {
     // 错误提示已由拦截器统一处理
   } finally {
-    loading.value = false;
+    loading.value = false
   }
 }
 
 async function fetchBlogs() {
   try {
-    blogs.value = await getAllBlog();
+    blogs.value = await getAllBlog()
     blogs.value.forEach((e) => {
-      blogMap.value.set(e.value, e.label);
-    });
+      blogMap.value.set(e.value, e.label)
+    })
   } catch {
     // 错误提示已由拦截器统一处理
   }
 }
 
 function handleSearch() {
-  query.pageNum = 1;
-  fetchList();
+  query.pageNum = 1
+  fetchList()
 }
 
 const handlePublish = (row: CommentVO) => {
   updateCommentPublish(row.id, !row.isPublished).then(() => {
-    ElMessage.success('操作成功');
-    row.isPublished = !row.isPublished;
-  });
-};
+    ElMessage.success('操作成功')
+    row.isPublished = !row.isPublished
+  })
+}
 
 const handleDelete = async (id: string) => {
   try {
@@ -180,22 +180,22 @@ const handleDelete = async (id: string) => {
       type: 'warning',
       confirmButtonText: '删除',
       cancelButtonText: '取消',
-    });
+    })
   } catch {
-    return;
+    return
   }
 
   delComment(id)
     .then(() => {
-      ElMessage.success('删除成功');
+      ElMessage.success('删除成功')
     })
     .finally(() => {
-      fetchList();
-    });
-};
+      fetchList()
+    })
+}
 
 onMounted(() => {
-  fetchBlogs();
-  fetchList();
-});
+  fetchBlogs()
+  fetchList()
+})
 </script>

@@ -126,48 +126,48 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, reactive, ref } from 'vue';
-import { ElMessage, ElMessageBox, vLoading } from 'element-plus';
-import type { FriendPageDTO, FriendVO } from '@/api/types';
-import { delFriend, getFriendList, updateFriendPublish } from '@/api/friend.ts';
-import { Refresh, Search } from '@element-plus/icons-vue';
+import { onMounted, reactive, ref } from 'vue'
+import { ElMessage, ElMessageBox, vLoading } from 'element-plus'
+import type { FriendPageDTO, FriendVO } from '@/api/types'
+import { delFriend, getFriendList, updateFriendPublish } from '@/api/friend.ts'
+import { Refresh, Search } from '@element-plus/icons-vue'
 
-const loading = ref(false);
-const rows = ref<FriendVO[]>([]);
-const total = ref(0);
+const loading = ref(false)
+const rows = ref<FriendVO[]>([])
+const total = ref(0)
 
-const query = reactive<FriendPageDTO>({ pageNum: 1, pageSize: 10, nickname: '', website: '' });
+const query = reactive<FriendPageDTO>({ pageNum: 1, pageSize: 10, nickname: '', website: '' })
 
 async function fetchList() {
-  loading.value = true;
+  loading.value = true
   try {
-    const data = await getFriendList(query);
-    rows.value = data.records;
-    total.value = data.total;
+    const data = await getFriendList(query)
+    rows.value = data.records
+    total.value = data.total
   } catch {
     // 错误提示已由拦截器统一处理
   } finally {
-    loading.value = false;
+    loading.value = false
   }
 }
 
 function handleSearch() {
-  query.pageNum = 1;
-  fetchList();
+  query.pageNum = 1
+  fetchList()
 }
 
 function handleReset() {
-  query.nickname = '';
-  query.website = '';
-  handleSearch();
+  query.nickname = ''
+  query.website = ''
+  handleSearch()
 }
 
 const handlePublish = (row: FriendVO) => {
   updateFriendPublish({ id: row.id, isPublished: !row.isPublished }).then(() => {
-    ElMessage.success('操作成功');
-    row.isPublished = !row.isPublished;
-  });
-};
+    ElMessage.success('操作成功')
+    row.isPublished = !row.isPublished
+  })
+}
 
 const handleDelete = async (id: string) => {
   try {
@@ -175,21 +175,21 @@ const handleDelete = async (id: string) => {
       type: 'warning',
       confirmButtonText: '删除',
       cancelButtonText: '取消',
-    });
+    })
   } catch {
-    return;
+    return
   }
 
   delFriend(id)
     .then(() => {
-      ElMessage.success('删除成功');
+      ElMessage.success('删除成功')
     })
     .finally(() => {
-      fetchList();
-    });
-};
+      fetchList()
+    })
+}
 
 onMounted(() => {
-  fetchList();
-});
+  fetchList()
+})
 </script>

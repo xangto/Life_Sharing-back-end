@@ -51,30 +51,30 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import { ElMessageBox } from 'element-plus';
-import { ArrowDown, Lock, SwitchButton } from '@element-plus/icons-vue';
-import { useAuthStore } from '@/stores/auth';
-import { Icon } from '@iconify/vue';
+import { computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { ElMessageBox } from 'element-plus'
+import { ArrowDown, Lock, SwitchButton } from '@element-plus/icons-vue'
+import { useAuthStore } from '@/stores/auth'
+import { Icon } from '@iconify/vue'
 
-const route = useRoute();
-const router = useRouter();
-const auth = useAuthStore();
+const route = useRoute()
+const router = useRouter()
+const auth = useAuthStore()
 
-const avatarText = computed(() => (auth.username || 'A').slice(0, 1).toUpperCase());
+const avatarText = computed(() => (auth.username || 'A').slice(0, 1).toUpperCase())
 
 async function handleCommand(command: string | number | object) {
   if (command === 'password') {
-    router.push('/password');
+    router.push('/password')
   } else if (command === 'logout') {
     try {
-      await ElMessageBox.confirm('确定退出登录吗？', '提示', { type: 'warning' });
+      await ElMessageBox.confirm('确定退出登录吗？', '提示', { type: 'warning' })
     } catch {
-      return;
+      return
     }
-    auth.logout();
-    router.push('/login');
+    auth.logout()
+    router.push('/login')
   }
 }
 </script>

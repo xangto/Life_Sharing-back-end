@@ -38,16 +38,16 @@
 </template>
 
 <script setup lang="ts">
-import { Icon } from '@iconify/vue';
+import { Icon } from '@iconify/vue'
 
 type menuItem = {
-  path: string;
-  label: string;
-  iconName: string | undefined;
-  children?: menuItem[];
-};
+  path: string
+  label: string
+  iconName: string | undefined
+  children?: menuItem[]
+}
 
 defineProps<{
-  item: menuItem;
-}>();
+  item: menuItem
+}>()
 </script>

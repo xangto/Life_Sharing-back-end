@@ -172,82 +172,82 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, reactive, ref } from 'vue';
-import { useRouter } from 'vue-router';
-import { ElMessage, ElMessageBox } from 'element-plus';
-import { vLoading } from 'element-plus';
-import { Plus, Refresh, Search } from '@element-plus/icons-vue';
-import { deleteBlog, getBlogList, setBlogPublish, setBlogTop } from '@/api/blog';
-import { getAllCategory } from '@/api/category';
-import type { BlogVO, OptionVO } from '@/api/types';
+import { onMounted, reactive, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { vLoading } from 'element-plus'
+import { Plus, Refresh, Search } from '@element-plus/icons-vue'
+import { deleteBlog, getBlogList, setBlogPublish, setBlogTop } from '@/api/blog'
+import { getAllCategory } from '@/api/category'
+import type { BlogVO, OptionVO } from '@/api/types'
 
-const router = useRouter();
+const router = useRouter()
 
-const loading = ref(false);
-const rows = ref<BlogVO[]>([]);
-const total = ref(0);
-const categories = ref<OptionVO[]>([]);
+const loading = ref(false)
+const rows = ref<BlogVO[]>([])
+const total = ref(0)
+const categories = ref<OptionVO[]>([])
 
-const query = reactive({ pageNum: 1, pageSize: 10, title: '', categoryId: '' });
+const query = reactive({ pageNum: 1, pageSize: 10, title: '', categoryId: '' })
 
 async function fetchList() {
-  loading.value = true;
+  loading.value = true
   try {
     const data = await getBlogList({
       pageNum: query.pageNum,
       pageSize: query.pageSize,
       title: query.title || undefined,
       categoryId: query.categoryId || undefined,
-    });
-    rows.value = data.records;
-    total.value = data.total;
+    })
+    rows.value = data.records
+    total.value = data.total
   } catch {
     // 错误提示已由拦截器统一处理
   } finally {
-    loading.value = false;
+    loading.value = false
   }
 }
 
 async function fetchCategories() {
   try {
-    categories.value = await getAllCategory();
+    categories.value = await getAllCategory()
   } catch {
     // 错误提示已由拦截器统一处理
   }
 }
 
 function categoryName(id: string) {
-  return categories.value.find((c) => c.value === id)?.label ?? '-';
+  return categories.value.find((c) => c.value === id)?.label ?? '-'
 }
 
 function handleSearch() {
-  query.pageNum = 1;
-  fetchList();
+  query.pageNum = 1
+  fetchList()
 }
 
 function handleReset() {
-  query.title = '';
-  query.categoryId = '';
-  handleSearch();
+  query.title = ''
+  query.categoryId = ''
+  handleSearch()
 }
 
 async function handlePublish(row: BlogVO, value: string | number | boolean) {
-  const next = Boolean(value);
+  const next = Boolean(value)
   try {
-    await setBlogPublish({ id: String(row.id), isPublished: next });
-    row.isPublished = next;
-    ElMessage.success(next ? '已发布' : '已取消发布');
+    await setBlogPublish({ id: String(row.id), isPublished: next })
+    row.isPublished = next
+    ElMessage.success(next ? '已发布' : '已取消发布')
   } catch {
     // 失败时开关随绑定值自动回退（row.isPublished 未变）
   }
 }
 
 async function handleTop(row: BlogVO, value: string | number | boolean) {
-  const next = Boolean(value);
+  const next = Boolean(value)
   try {
-    await setBlogTop({ id: String(row.id), isTop: next });
-    row.isTop = next;
-    ElMessage.success(next ? '已置顶' : '已取消置顶');
+    await setBlogTop({ id: String(row.id), isTop: next })
+    row.isTop = next
+    ElMessage.success(next ? '已置顶' : '已取消置顶')
   } catch {
     // 失败时开关随绑定值自动回退
   }
@@ -259,21 +259,21 @@ async function handleDelete(row: BlogVO) {
       type: 'warning',
       confirmButtonText: '删除',
       cancelButtonText: '取消',
-    });
+    })
   } catch {
-    return;
+    return
   }
   try {
-    await deleteBlog(row.id);
-    ElMessage.success('删除成功');
-    fetchList();
+    await deleteBlog(row.id)
+    ElMessage.success('删除成功')
+    fetchList()
   } catch {
     // 错误提示已由拦截器统一处理
   }
 }
 
 onMounted(() => {
-  fetchCategories();
-  fetchList();
-});
+  fetchCategories()
+  fetchList()
+})
 </script>

@@ -1,4 +1,4 @@
-import http from './request';
+import http from './request'
 import type {
   CategoryCreateDTO,
   CategoryUpdateDTO,
@@ -6,24 +6,24 @@ import type {
   OptionVO,
   PageQuery,
   PageVO,
-} from './types';
+} from './types'
 
 export function getCategoryList(params: PageQuery) {
-  return http.get<PageVO<CategoryVO>>('/admin/category/list', params);
+  return http.get<PageVO<CategoryVO>>('/admin/category/list', params)
 }
 
 export function getAllCategory() {
-  return http.get<OptionVO[]>('/category/list');
+  return http.get<OptionVO[]>('/category/list')
 }
 
 export function createCategory(data: CategoryCreateDTO) {
-  return http.post<void>('/admin/category', data);
+  return http.post<void>('/admin/category', data)
 }
 
 export function updateCategory(data: CategoryUpdateDTO) {
-  return http.put<void>('/admin/category', data);
+  return http.put<void>('/admin/category', data)
 }
 
 export function deleteCategory(id: string) {
-  return http.delete<void>(`/admin/category/${id}`);
+  return http.delete<void>(`/admin/category/${id}`)
 }

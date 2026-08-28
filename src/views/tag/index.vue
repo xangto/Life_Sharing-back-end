@@ -118,73 +118,73 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, reactive, ref } from 'vue';
-import { ElMessage, ElMessageBox } from 'element-plus';
-import { vLoading } from 'element-plus';
-import { Plus } from '@element-plus/icons-vue';
-import type { FormInstance, FormRules } from 'element-plus';
-import { createTag, deleteTag, getTagList, updateTag } from '@/api/tag';
-import type { TagVO } from '@/api/types';
+import { onMounted, reactive, ref } from 'vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { vLoading } from 'element-plus'
+import { Plus } from '@element-plus/icons-vue'
+import type { FormInstance, FormRules } from 'element-plus'
+import { createTag, deleteTag, getTagList, updateTag } from '@/api/tag'
+import type { TagVO } from '@/api/types'
 
-const loading = ref(false);
-const rows = ref<TagVO[]>([]);
-const total = ref(0);
-const query = reactive({ pageNum: 1, pageSize: 10 });
+const loading = ref(false)
+const rows = ref<TagVO[]>([])
+const total = ref(0)
+const query = reactive({ pageNum: 1, pageSize: 10 })
 
-const dialogVisible = ref(false);
-const saving = ref(false);
-const editingId = ref<string | null>(null);
-const formRef = ref<FormInstance>();
-const form = reactive({ name: '', color: '#409eff' });
+const dialogVisible = ref(false)
+const saving = ref(false)
+const editingId = ref<string | null>(null)
+const formRef = ref<FormInstance>()
+const form = reactive({ name: '', color: '#409eff' })
 
 const rules: FormRules = {
   name: [{ required: true, message: '请输入标签名称', trigger: 'blur' }],
   color: [{ required: true, message: '请选择颜色', trigger: 'change' }],
-};
+}
 
 async function fetchList() {
-  loading.value = true;
+  loading.value = true
   try {
-    const data = await getTagList({ pageNum: query.pageNum, pageSize: query.pageSize });
-    rows.value = data.records;
-    total.value = data.total;
+    const data = await getTagList({ pageNum: query.pageNum, pageSize: query.pageSize })
+    rows.value = data.records
+    total.value = data.total
   } catch {
     // 错误提示已由拦截器统一处理
   } finally {
-    loading.value = false;
+    loading.value = false
   }
 }
 
 function handleSearch() {
-  query.pageNum = 1;
-  fetchList();
+  query.pageNum = 1
+  fetchList()
 }
 
 function openDialog(row?: TagVO) {
-  editingId.value = row?.id ?? null;
-  form.name = row?.name ?? '';
-  form.color = row?.color ?? '#409eff';
-  dialogVisible.value = true;
-  formRef.value?.clearValidate();
+  editingId.value = row?.id ?? null
+  form.name = row?.name ?? ''
+  form.color = row?.color ?? '#409eff'
+  dialogVisible.value = true
+  formRef.value?.clearValidate()
 }
 
 async function handleSave() {
-  const valid = await formRef.value?.validate().catch(() => false);
-  if (!valid) return;
-  saving.value = true;
+  const valid = await formRef.value?.validate().catch(() => false)
+  if (!valid) return
+  saving.value = true
   try {
     if (editingId.value) {
-      await updateTag({ id: editingId.value, name: form.name, color: form.color });
+      await updateTag({ id: editingId.value, name: form.name, color: form.color })
     } else {
-      await createTag({ name: form.name, color: form.color });
+      await createTag({ name: form.name, color: form.color })
     }
-    ElMessage.success('保存成功');
-    dialogVisible.value = false;
-    fetchList();
+    ElMessage.success('保存成功')
+    dialogVisible.value = false
+    fetchList()
   } catch {
     // 错误提示已由拦截器统一处理
   } finally {
-    saving.value = false;
+    saving.value = false
   }
 }
 
@@ -194,18 +194,18 @@ async function handleDelete(row: TagVO) {
       type: 'warning',
       confirmButtonText: '删除',
       cancelButtonText: '取消',
-    });
+    })
   } catch {
-    return;
+    return
   }
   try {
-    await deleteTag(row.id);
-    ElMessage.success('删除成功');
-    fetchList();
+    await deleteTag(row.id)
+    ElMessage.success('删除成功')
+    fetchList()
   } catch {
     // 错误提示已由拦截器统一处理
   }
 }
 
-onMounted(fetchList);
+onMounted(fetchList)
 </script>

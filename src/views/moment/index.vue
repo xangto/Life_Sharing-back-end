@@ -126,91 +126,91 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, reactive, ref } from 'vue';
-import { ElMessage, ElMessageBox } from 'element-plus';
-import { vLoading } from 'element-plus';
-import { Plus } from '@element-plus/icons-vue';
-import type { FormInstance, FormRules } from 'element-plus';
+import { onMounted, reactive, ref } from 'vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { vLoading } from 'element-plus'
+import { Plus } from '@element-plus/icons-vue'
+import type { FormInstance, FormRules } from 'element-plus'
 import {
   createMoment,
   deleteMoment,
   getMomentList,
   publishMoment,
   updateMoment,
-} from '@/api/moment';
-import type { MomentVO } from '@/api/types';
+} from '@/api/moment'
+import type { MomentVO } from '@/api/types'
 
-const loading = ref(false);
-const rows = ref<MomentVO[]>([]);
-const total = ref(0);
-const query = reactive({ pageNum: 1, pageSize: 10 });
+const loading = ref(false)
+const rows = ref<MomentVO[]>([])
+const total = ref(0)
+const query = reactive({ pageNum: 1, pageSize: 10 })
 
-const dialogVisible = ref(false);
-const saving = ref(false);
-const editingId = ref<string | null>(null);
-const formRef = ref<FormInstance>();
-const form = reactive({ content: '', isPublished: false });
+const dialogVisible = ref(false)
+const saving = ref(false)
+const editingId = ref<string | null>(null)
+const formRef = ref<FormInstance>()
+const form = reactive({ content: '', isPublished: false })
 
 const rules: FormRules = {
   content: [{ required: true, message: '请输入内容', trigger: 'blur' }],
-};
+}
 
 async function fetchList() {
-  loading.value = true;
+  loading.value = true
   try {
-    const data = await getMomentList({ pageNum: query.pageNum, pageSize: query.pageSize });
-    rows.value = data.records;
-    total.value = data.total;
+    const data = await getMomentList({ pageNum: query.pageNum, pageSize: query.pageSize })
+    rows.value = data.records
+    total.value = data.total
   } catch {
     // 错误提示已由拦截器统一处理
   } finally {
-    loading.value = false;
+    loading.value = false
   }
 }
 
 function handleSearch() {
-  query.pageNum = 1;
-  fetchList();
+  query.pageNum = 1
+  fetchList()
 }
 
 function openDialog(row?: MomentVO) {
-  editingId.value = row?.id ?? null;
-  form.content = row?.content ?? '';
-  form.isPublished = row?.isPublished ?? false;
-  dialogVisible.value = true;
-  formRef.value?.clearValidate();
+  editingId.value = row?.id ?? null
+  form.content = row?.content ?? ''
+  form.isPublished = row?.isPublished ?? false
+  dialogVisible.value = true
+  formRef.value?.clearValidate()
 }
 
 async function handleSave() {
-  const valid = await formRef.value?.validate().catch(() => false);
-  if (!valid) return;
-  saving.value = true;
+  const valid = await formRef.value?.validate().catch(() => false)
+  if (!valid) return
+  saving.value = true
   try {
     if (editingId.value) {
       await updateMoment({
         id: editingId.value,
         content: form.content,
         isPublished: form.isPublished,
-      });
+      })
     } else {
-      await createMoment({ content: form.content, isPublished: form.isPublished });
+      await createMoment({ content: form.content, isPublished: form.isPublished })
     }
-    ElMessage.success('保存成功');
-    dialogVisible.value = false;
-    fetchList();
+    ElMessage.success('保存成功')
+    dialogVisible.value = false
+    fetchList()
   } catch {
     // 错误提示已由拦截器统一处理
   } finally {
-    saving.value = false;
+    saving.value = false
   }
 }
 
 async function handlePublish(row: MomentVO, value: string | number | boolean) {
-  const next = Boolean(value);
+  const next = Boolean(value)
   try {
-    await publishMoment({ id: row.id, isPublished: next });
-    row.isPublished = next;
-    ElMessage.success(next ? '已发布' : '已取消发布');
+    await publishMoment({ id: row.id, isPublished: next })
+    row.isPublished = next
+    ElMessage.success(next ? '已发布' : '已取消发布')
   } catch {
     // 失败时开关随绑定值自动回退
   }
@@ -222,18 +222,18 @@ async function handleDelete(row: MomentVO) {
       type: 'warning',
       confirmButtonText: '删除',
       cancelButtonText: '取消',
-    });
+    })
   } catch {
-    return;
+    return
   }
   try {
-    await deleteMoment(row.id);
-    ElMessage.success('删除成功');
-    fetchList();
+    await deleteMoment(row.id)
+    ElMessage.success('删除成功')
+    fetchList()
   } catch {
     // 错误提示已由拦截器统一处理
   }
 }
 
-onMounted(fetchList);
+onMounted(fetchList)
 </script>

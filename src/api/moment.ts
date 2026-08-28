@@ -1,4 +1,4 @@
-import http from './request';
+import http from './request'
 import type {
   MomentCreateDTO,
   MomentPublishDTO,
@@ -6,24 +6,24 @@ import type {
   MomentVO,
   PageQuery,
   PageVO,
-} from './types';
+} from './types'
 
 export function getMomentList(params: PageQuery) {
-  return http.get<PageVO<MomentVO>>('/admin/moment/list', params);
+  return http.get<PageVO<MomentVO>>('/admin/moment/list', params)
 }
 
 export function createMoment(data: MomentCreateDTO) {
-  return http.post<void>('/admin/moment', data);
+  return http.post<void>('/admin/moment', data)
 }
 
 export function updateMoment(data: MomentUpdateDTO) {
-  return http.put<void>('/admin/moment', data);
+  return http.put<void>('/admin/moment', data)
 }
 
 export function publishMoment(data: MomentPublishDTO) {
-  return http.put<void>('/admin/moment/publish', data);
+  return http.put<void>('/admin/moment/publish', data)
 }
 
 export function deleteMoment(id: string) {
-  return http.delete<void>(`/admin/moment/${id}`);
+  return http.delete<void>(`/admin/moment/${id}`)
 }

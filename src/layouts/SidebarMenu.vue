@@ -24,11 +24,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import { useRoute } from 'vue-router';
-import { Platform } from '@element-plus/icons-vue';
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
+import { Platform } from '@element-plus/icons-vue'
 
-const route = useRoute();
+const route = useRoute()
 
 const menus = [
   { path: '/dashboard', label: '首页', iconName: 'material-symbols:house-outline' },
@@ -53,11 +53,11 @@ const menus = [
       { path: '/about', label: '关于我', iconName: 'cib:about-me' },
     ],
   },
-];
+]
 
 // 文章编辑页归属"文章管理"菜单高亮
 const activeMenu = computed(() => {
-  if (route.path.startsWith('/blog')) return '/blog';
-  return route.path;
-});
+  if (route.path.startsWith('/blog')) return '/blog'
+  return route.path
+})
 </script>

@@ -1,4 +1,4 @@
-import TurndownService from 'turndown';
+import TurndownService from 'turndown'
 
 /**
  * HTML 字符串转 Markdown
@@ -6,7 +6,7 @@ import TurndownService from 'turndown';
  * @returns markdown文本
  */
 export function htmlToMarkdown(html: string): string {
-  if (!html) return '';
+  if (!html) return ''
 
   const turndown = new TurndownService({
     headingStyle: 'atx', // 使用 # 标题
@@ -14,7 +14,7 @@ export function htmlToMarkdown(html: string): string {
     codeBlockStyle: 'fenced', // ``` 代码块
     emDelimiter: '*', // 斜体 *
     strongDelimiter: '**', // 加粗 **
-  });
+  })
 
   // 可选：移除不需要转换的标签，比如 <div class="xxx"> 只保留内部文本
   // turndown.addRule('removeDiv', {
@@ -24,5 +24,5 @@ export function htmlToMarkdown(html: string): string {
   //   },
   // });
 
-  return turndown.turndown(html);
+  return turndown.turndown(html)
 }

@@ -98,71 +98,71 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, reactive, ref } from 'vue';
-import { ElMessage, ElMessageBox } from 'element-plus';
-import { vLoading } from 'element-plus';
-import { Plus } from '@element-plus/icons-vue';
-import type { FormInstance, FormRules } from 'element-plus';
-import { createCategory, deleteCategory, getCategoryList, updateCategory } from '@/api/category';
-import type { CategoryVO } from '@/api/types';
+import { onMounted, reactive, ref } from 'vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { vLoading } from 'element-plus'
+import { Plus } from '@element-plus/icons-vue'
+import type { FormInstance, FormRules } from 'element-plus'
+import { createCategory, deleteCategory, getCategoryList, updateCategory } from '@/api/category'
+import type { CategoryVO } from '@/api/types'
 
-const loading = ref(false);
-const rows = ref<CategoryVO[]>([]);
-const total = ref(0);
-const query = reactive({ pageNum: 1, pageSize: 10 });
+const loading = ref(false)
+const rows = ref<CategoryVO[]>([])
+const total = ref(0)
+const query = reactive({ pageNum: 1, pageSize: 10 })
 
-const dialogVisible = ref(false);
-const saving = ref(false);
-const editingId = ref<string | null>(null);
-const formRef = ref<FormInstance>();
-const form = reactive({ name: '' });
+const dialogVisible = ref(false)
+const saving = ref(false)
+const editingId = ref<string | null>(null)
+const formRef = ref<FormInstance>()
+const form = reactive({ name: '' })
 
 const rules: FormRules = {
   name: [{ required: true, message: '请输入分类名称', trigger: 'blur' }],
-};
+}
 
 async function fetchList() {
-  loading.value = true;
+  loading.value = true
   try {
-    const data = await getCategoryList({ pageNum: query.pageNum, pageSize: query.pageSize });
-    rows.value = data.records;
-    total.value = data.total;
+    const data = await getCategoryList({ pageNum: query.pageNum, pageSize: query.pageSize })
+    rows.value = data.records
+    total.value = data.total
   } catch {
     // 错误提示已由拦截器统一处理
   } finally {
-    loading.value = false;
+    loading.value = false
   }
 }
 
 function handleSearch() {
-  query.pageNum = 1;
-  fetchList();
+  query.pageNum = 1
+  fetchList()
 }
 
 function openDialog(row?: CategoryVO) {
-  editingId.value = row?.id ?? null;
-  form.name = row?.name ?? '';
-  dialogVisible.value = true;
-  formRef.value?.clearValidate();
+  editingId.value = row?.id ?? null
+  form.name = row?.name ?? ''
+  dialogVisible.value = true
+  formRef.value?.clearValidate()
 }
 
 async function handleSave() {
-  const valid = await formRef.value?.validate().catch(() => false);
-  if (!valid) return;
-  saving.value = true;
+  const valid = await formRef.value?.validate().catch(() => false)
+  if (!valid) return
+  saving.value = true
   try {
     if (editingId.value) {
-      await updateCategory({ id: editingId.value, name: form.name });
+      await updateCategory({ id: editingId.value, name: form.name })
     } else {
-      await createCategory({ name: form.name });
+      await createCategory({ name: form.name })
     }
-    ElMessage.success('保存成功');
-    dialogVisible.value = false;
-    fetchList();
+    ElMessage.success('保存成功')
+    dialogVisible.value = false
+    fetchList()
   } catch {
     // 错误提示已由拦截器统一处理
   } finally {
-    saving.value = false;
+    saving.value = false
   }
 }
 
@@ -172,18 +172,18 @@ async function handleDelete(row: CategoryVO) {
       type: 'warning',
       confirmButtonText: '删除',
       cancelButtonText: '取消',
-    });
+    })
   } catch {
-    return;
+    return
   }
   try {
-    await deleteCategory(row.id);
-    ElMessage.success('删除成功');
-    fetchList();
+    await deleteCategory(row.id)
+    ElMessage.success('删除成功')
+    fetchList()
   } catch {
     // 错误提示已由拦截器统一处理
   }
 }
 
-onMounted(fetchList);
+onMounted(fetchList)
 </script>
